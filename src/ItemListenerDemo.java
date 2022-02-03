@@ -2,8 +2,6 @@
 import java.awt.*;
 import java.awt.event.*;
 
-
-
 public class ItemListenerDemo extends Frame implements ItemListener {
     Checkbox checkbox1, checkbox2;
     Label label;
@@ -33,14 +31,14 @@ public class ItemListenerDemo extends Frame implements ItemListener {
     @Override
     public void itemStateChanged(ItemEvent e) {
         if (e.getSource() == checkbox1) {
-            Boolean isChecked = checkbox1.getState();
+            boolean isChecked = checkbox1.getState();
             if (isChecked) {
                 label.setText("c++ checked");
             } else {
                 label.setText("C++ unchecked");
             }
         } else {
-            Boolean isChecked = checkbox1.getState();
+            boolean isChecked = checkbox1.getState();
             if (isChecked) {
                 label.setText("java checked");
             } else {
@@ -49,10 +47,8 @@ public class ItemListenerDemo extends Frame implements ItemListener {
         }
 
     }
+
     public static void main(String[] args) {
         new ItemListenerDemo();
     }
 }
-
-
-
