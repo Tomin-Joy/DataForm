@@ -24,7 +24,7 @@ class App extends Frame implements ActionListener, WindowListener {
     }
 
     void run() {
-        setSize(800, 600);
+        setSize(450, 600);
         // setResizable(false);
         setLayout(new GridLayout(6, 1));
         setVisible(true);
