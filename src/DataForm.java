@@ -1,8 +1,5 @@
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
+import java.awt.event.*;
 
 public class DataForm {
     public static void main(String[] args) {
@@ -12,16 +9,15 @@ public class DataForm {
 
 }
 
-class App extends Frame implements ActionListener, WindowListener {
+class App extends Frame implements ActionListener, WindowListener, FocusListener {
 
     TextField tName;
     TextField tAge;
     TextField tEmail;
     TextField tPhone;
-
-    App(){
-        addWindowListener(this);
-    }
+    Button submit;
+    Font f1;
+    Font f2;
 
     void run() {
         setSize(450, 600);
@@ -29,7 +25,7 @@ class App extends Frame implements ActionListener, WindowListener {
         setLayout(new GridLayout(6, 1));
         setVisible(true);
         setTitle("Data Form V-1.0.2");
-
+        addWindowListener(this);
 
         Panel pTitle = new Panel(new FlowLayout(FlowLayout.CENTER, 30, 20));
         Panel pName = new Panel(new FlowLayout(FlowLayout.CENTER, 30, 20));
@@ -38,9 +34,11 @@ class App extends Frame implements ActionListener, WindowListener {
         Panel pPhone = new Panel(new FlowLayout(FlowLayout.CENTER, 30, 20));
         Panel pSubmit = new Panel(new FlowLayout(FlowLayout.CENTER, 30, 20));
 
-        Font f1 = new Font(Font.DIALOG_INPUT, Font.BOLD, 34);
-        Font f2 = new Font(Font.DIALOG, Font.PLAIN, 18);
-        Font f3 = new Font(Font.DIALOG_INPUT, Font.PLAIN, 14);
+        f1 = new Font(Font.DIALOG_INPUT, Font.PLAIN, 14);
+        f2 = new Font(Font.DIALOG_INPUT, Font.BOLD, 16);
+        Font fTitle = new Font(Font.DIALOG_INPUT, Font.BOLD, 34);
+        Font fLabel = new Font(Font.DIALOG, Font.PLAIN, 18);
+
 
         Color c1 = new Color(201, 201, 201);
 
@@ -50,7 +48,7 @@ class App extends Frame implements ActionListener, WindowListener {
         Label email = new Label("Email  : ", 2);
         Label phone = new Label("Phone  : ", 2);
 
-        Button submit = new Button("Submit");
+        submit = new Button("Submit");
 
         tName = new TextField("Enter name here..", 20);
         tAge = new TextField("Enter age here..", 20);
@@ -62,19 +60,24 @@ class App extends Frame implements ActionListener, WindowListener {
         tEmail.setBackground(c1);
         tPhone.setBackground(c1);
 
-        submit.setFont(f2);
+        submit.setFont(fLabel);
         submit.setBackground(Color.GREEN);
-        submit.addActionListener(this);
 
-        title.setFont(f1);
-        name.setFont(f2);
-        age.setFont(f2);
-        email.setFont(f2);
-        phone.setFont(f2);
-        tName.setFont(f3);
-        tAge.setFont(f3);
-        tEmail.setFont(f3);
-        tPhone.setFont(f3);
+        submit.addActionListener(this);
+        tName.addFocusListener(this);
+        tAge.addFocusListener(this);
+        tEmail.addFocusListener(this);
+        tPhone.addFocusListener(this);
+
+        title.setFont(fTitle);
+        name.setFont(fLabel);
+        age.setFont(fLabel);
+        email.setFont(fLabel);
+        phone.setFont(fLabel);
+        tName.setFont(f1);
+        tAge.setFont(f1);
+        tEmail.setFont(f1);
+        tPhone.setFont(f1);
 
         pTitle.add(title);
         pName.add(name);
@@ -108,7 +111,6 @@ class App extends Frame implements ActionListener, WindowListener {
         tEmail.setText("");
         tName.setText("");
         tPhone.setText("");
-
     }
 
     @Override
@@ -144,5 +146,18 @@ class App extends Frame implements ActionListener, WindowListener {
     @Override
     public void windowDeactivated(WindowEvent e) {
 
+    }
+
+    @Override
+    public void focusGained(FocusEvent e) {
+        TextField t= (TextField) e.getSource();
+        t.selectAll();
+        t.setFont(f2);
+    }
+
+    @Override
+    public void focusLost(FocusEvent e) {
+        TextField t= (TextField) e.getSource();
+        t.setFont(f1);
     }
 }
