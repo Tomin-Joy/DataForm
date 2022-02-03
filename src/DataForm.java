@@ -1,6 +1,8 @@
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 
 public class DataForm {
     public static void main(String[] args) {
@@ -10,18 +12,24 @@ public class DataForm {
 
 }
 
-class App extends Frame implements ActionListener {
+class App extends Frame implements ActionListener, WindowListener {
 
     TextField tName;
     TextField tAge;
     TextField tEmail;
     TextField tPhone;
 
+    App(){
+        addWindowListener(this);
+    }
+
     void run() {
         setSize(800, 600);
         // setResizable(false);
         setLayout(new GridLayout(6, 1));
         setVisible(true);
+        setTitle("Data Form V-1.0.2");
+
 
         Panel pTitle = new Panel(new FlowLayout(FlowLayout.CENTER, 30, 20));
         Panel pName = new Panel(new FlowLayout(FlowLayout.CENTER, 30, 20));
@@ -90,14 +98,51 @@ class App extends Frame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        System.out.print("\nDetails :  \n\n");
         System.out.println("Name         : " + tName.getText());
         System.out.println("Age          : " + tAge.getText());
         System.out.println("Email        : " + tEmail.getText());
         System.out.println("Phone number : " + tPhone.getText());
+        System.out.print("\n");
         tAge.setText("");
         tEmail.setText("");
         tName.setText("");
         tPhone.setText("");
+
+    }
+
+    @Override
+    public void windowOpened(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowClosing(WindowEvent e) {
+            dispose();
+    }
+
+    @Override
+    public void windowClosed(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowIconified(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowDeiconified(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowActivated(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowDeactivated(WindowEvent e) {
 
     }
 }
