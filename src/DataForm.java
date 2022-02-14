@@ -1,32 +1,53 @@
+import com.mysql.cj.jdbc.exceptions.MysqlDataTruncation;
+
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.Statement;
 
 public class DataForm {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws  Exception{
+        Class.forName("com.mysql.cj.jdbc.Driver");
+        Connection con = DriverManager.getConnection("jdbc:mysql://localhost/", "root", "");
+        Statement smt = con.createStatement();
+        try{
+            smt.execute("use Data");
+            System.out.println("found");
+
+        }catch (Exception ex){
+            System.out.println("not found");
+            smt.execute("Create database Data");
+            smt.execute("use Data");
+            smt.execute("create table Data(Name varchar(50),Age varchar(50),Email varchar(50),Phone varchar(20))");
+
+        }
         App app = new App();
-        app.run();
+        app.run(con,smt);
+
+
+
     }
 
 }
 
-class App extends Frame implements ActionListener, WindowListener, FocusListener {
+class App extends JFrame implements ActionListener, FocusListener {
 
     TextField tName;
     TextField tAge;
     TextField tEmail;
     TextField tPhone;
-    Button submit;
+    JButton submit;
     Font f1;
     Font f2;
+    Statement smt;
+    Connection con;
 
-    void run() {
-        setSize(450, 600);
-        // setResizable(false);
-        setLayout(new GridLayout(6, 1));
-        setVisible(true);
-        setTitle("Data Form V-1.0.2");
-        addWindowListener(this);
-
+    void run(Connection con,Statement smt) {
+        this.smt=smt;
+        this.con=con;
+        
         Panel pTitle = new Panel(new FlowLayout(FlowLayout.CENTER, 30, 20));
         Panel pName = new Panel(new FlowLayout(FlowLayout.CENTER, 30, 20));
         Panel pAge = new Panel(new FlowLayout(FlowLayout.CENTER, 30, 20));
@@ -48,7 +69,7 @@ class App extends Frame implements ActionListener, WindowListener, FocusListener
         Label email = new Label("Email  : ", 2);
         Label phone = new Label("Phone  : ", 2);
 
-        submit = new Button("Submit");
+        submit = new JButton("Submit");
 
         tName = new TextField("Enter name here..", 20);
         tAge = new TextField("Enter age here..", 20);
@@ -97,6 +118,13 @@ class App extends Frame implements ActionListener, WindowListener, FocusListener
         add(pPhone);
         add(pSubmit);
 
+        setSize(500, 650);
+        // setResizable(false);
+        setLayout(new GridLayout(6, 1));
+        setVisible(true);
+        setTitle("Data Form V-1.0.2");
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+
     }
 
     @Override
@@ -107,46 +135,22 @@ class App extends Frame implements ActionListener, WindowListener, FocusListener
         System.out.println("Email        : " + tEmail.getText());
         System.out.println("Phone number : " + tPhone.getText());
         System.out.print("\n");
+        try {
+            String query = String.format("insert into Data values(\"%s\",\"%s\",\"%s\",\"%s\")",tName.getText(),tAge.getText(),tEmail.getText(),tPhone.getText());
+            smt.execute(query);
+        } catch (MysqlDataTruncation ex){
+            JOptionPane.showMessageDialog(this,"Data too long");
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
         tAge.setText("Enter age here..");
         tEmail.setText("Enter email here..");
         tName.setText("Enter name here..");
         tPhone.setText("Enter phone number here..");
     }
 
-    @Override
-    public void windowOpened(WindowEvent e) {
-
-    }
-
-    @Override
-    public void windowClosing(WindowEvent e) {
-            dispose();
-    }
-
-    @Override
-    public void windowClosed(WindowEvent e) {
-
-    }
-
-    @Override
-    public void windowIconified(WindowEvent e) {
-
-    }
-
-    @Override
-    public void windowDeiconified(WindowEvent e) {
-
-    }
-
-    @Override
-    public void windowActivated(WindowEvent e) {
-
-    }
-
-    @Override
-    public void windowDeactivated(WindowEvent e) {
-
-    }
 
     @Override
     public void focusGained(FocusEvent e) {
