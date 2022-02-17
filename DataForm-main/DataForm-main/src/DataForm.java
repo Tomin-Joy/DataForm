@@ -1,6 +1,7 @@
 import com.mysql.cj.jdbc.exceptions.MysqlDataTruncation;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.*;
 import java.sql.*;
@@ -31,10 +32,12 @@ public class DataForm {
 class App extends JFrame implements ActionListener, FocusListener {
 
     TextField tName,tAge,tEmail,tPhone;
-    JButton submit,showAll;
+    JButton submit,showAll,del;
     Font f1,f2;
     Statement smt;
     Connection con;
+    JFrame delBox = new JFrame();
+
 
     void run(Connection con,Statement smt) {
         this.smt=smt;
@@ -63,6 +66,7 @@ class App extends JFrame implements ActionListener, FocusListener {
 
         submit = new JButton("Submit");
         showAll = new JButton("Show all");
+        del = new JButton("Delete");
 
         tName = new TextField("Enter name here..", 20);
         tAge = new TextField("Enter age here..", 20);
@@ -80,9 +84,13 @@ class App extends JFrame implements ActionListener, FocusListener {
         showAll.setFont(fLabel);
         showAll.setBackground(Color.BLUE);
         showAll.setForeground(Color.WHITE);
+        del.setFont(fLabel);
+        del.setBackground(Color.RED);
+        del.setForeground(Color.WHITE);
 
         submit.addActionListener(this);
         showAll.addActionListener(this);
+        del.addActionListener(this);
         tName.addFocusListener(this);
         tAge.addFocusListener(this);
         tEmail.addFocusListener(this);
@@ -108,6 +116,7 @@ class App extends JFrame implements ActionListener, FocusListener {
         pPhone.add(phone);
         pPhone.add(tPhone);
         pSubmit.add(submit);
+        pSubmit.add(del);
         pSubmit.add(showAll);
 
         add(pTitle);
@@ -122,7 +131,6 @@ class App extends JFrame implements ActionListener, FocusListener {
         setLayout(new GridLayout(6, 1));
         setVisible(true);
         setTitle("Data Form V-1.0.2");
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
 
     }
 
@@ -153,14 +161,41 @@ class App extends JFrame implements ActionListener, FocusListener {
         }else if(b==showAll){
             try {
                 ResultSet d = smt.executeQuery("select * from data;");
+                String[] columnNames = {"Name", "Age", "Email", "Phone"};
+                JFrame detailsBox = new JFrame();
+                DefaultTableModel model = new DefaultTableModel();
+                model.setColumnIdentifiers(columnNames);
+                JTable details = new JTable();
+                details.setModel(model);
+                detailsBox.setLayout(new FlowLayout());
+                detailsBox.setSize(500,400);
+                details.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+                details.setFillsViewportHeight(true);
+                JScrollPane scroll = new JScrollPane(details);
+                scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+                scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+
+                detailsBox.setVisible(true);
+                detailsBox.add(scroll);
+
                 while (d.next()){
                     String str = d.getString("Name")+" "+d.getString("Age");
-                    System.out.println(str);
+                    String roll = d.getString("Name");
+                    String name = d.getString("Age");
+                    String cl = d.getString("Email");
+                    String sec = d.getString("Phone");
+                    model.addRow(new Object[]{roll, name, cl, sec});
+
                 }
             } catch (SQLException ex) {
                 ex.printStackTrace();
 
             }
+        }else if(b==del){
+            delBox.setSize(400,400);
+            delBox.setVisible(true);
+            delBox.setLayout(new BorderLayout());
+            JLabel tittle = new JLabel();
         }
     }
 
